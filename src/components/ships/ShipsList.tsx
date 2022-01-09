@@ -10,6 +10,7 @@ import {
     shipsAtom,
     displayOnlyFavoriteShipsAtom,
     favoriteShipsAtom,
+    searchInputIsEmptyAtom,
 } from "../../atoms";
 import { Ship } from "../../types/Ship";
 import { ShipCard } from "./ShipCard";
@@ -19,6 +20,13 @@ export const ShipsList = () => {
     const [allShips] = useAtom(shipsAtom);
     const [favoriteShips] = useAtom(favoriteShipsAtom)
     const [displayOnlyFavoriteShips,setDisplayOnlyFavoriteShips] = useAtom(displayOnlyFavoriteShipsAtom)
+    const [searchInputIsEmpty] = useAtom(searchInputIsEmptyAtom)
+    let shipsToDisplay = []
+    if(searchInputIsEmpty && displayOnlyFavoriteShips) {
+        shipsToDisplay = favoriteShips;
+    }else {
+        shipsToDisplay = allShips.filter((e)=>!displayOnlyFavoriteShips || favoriteShips.some(favoriteship=>e.id===favoriteship.id))
+    }
     
     return (
         <Container >
@@ -37,7 +45,7 @@ export const ShipsList = () => {
                 label="Only show favorite ships"
             />
             <Grid container spacing={3} >
-                {allShips.filter((e)=>!displayOnlyFavoriteShips || favoriteShips.some(favoriteship=>e.id===favoriteship.id)).map((ship : Ship,index : number) => 
+                {shipsToDisplay.map((ship : Ship,index : number) => 
                     <Grid item key={index} >
                         <ShipCard ship = {ship} />
                     </Grid>
