@@ -1,1 +1,1 @@
-![Main Screen](Screenshots/pic1.PNG)
+![Main Screen](screenshots/pic1.PNG)
