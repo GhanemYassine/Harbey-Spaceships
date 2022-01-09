@@ -6,7 +6,6 @@ import {
     displayOnlyFavoriteShipsAtom, 
     favoriteShipsAtom, 
     shipsAtom,
-    searchInputIsEmptyAtom
 } from "../../../atoms";
 import { Ship } from "../../../types/Ship";
 const graphqlQuery = (shipNameInput: string, shipType: string, shipMissionName: string) => {
@@ -37,13 +36,11 @@ export const useSearch = ()=> {
     const [ships,setShips] = useAtom(shipsAtom);
     const [favoriteShips] = useAtom(favoriteShipsAtom)
     const [displayOnlyFavoriteShips] = useAtom(displayOnlyFavoriteShipsAtom)
-    const [_searchInputIsEmpty,setSearchInputIsEmpty] = useAtom(searchInputIsEmptyAtom)
 
     React.useEffect(() => {
         const inputFieldsAreEmpty = shipNameSearchText.trim() === "" && 
             shipTypeSearchText.trim() === "" && 
             shipMissionNameSearchText.trim() === ""
-        setSearchInputIsEmpty(inputFieldsAreEmpty)
         const fetchSapceships = async() => {
             const currentYear = new Date().getFullYear() - 10
             console.log(currentYear);
@@ -58,7 +55,7 @@ export const useSearch = ()=> {
     },[shipNameSearchText,shipTypeSearchText,shipMissionNameSearchText,setShips])
     return { 
         shipNameSearchText,
-        ships : displayOnlyFavoriteShips ? favoriteShips : ships || [],
+        ships : ships.filter((e)=>!displayOnlyFavoriteShips || favoriteShips.some(favoriteship=>e.id===favoriteship.id)),
         setShipNameSearchText,
         shipTypeSearchText,
         shipMissionNameSearchText,
